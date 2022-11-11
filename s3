@@ -59,3 +59,37 @@ aws s3 sync s3://lsmv s3://lscl --source-region ap-south-1 --region us-east-1
                  source     destination                 
 
 aws s3 sync s3://sourcebu-h s3://destinationbu-h --source-region us-east-1 --region ap-south-1
+
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Place below policy inside destination s3 bucket
+{
+    "Version": "2012-10-17",
+    "Id": "",
+    "Statement": [
+        {
+            "Sid": "1",
+            "Effect": "Allow",
+            "Principal": {
+                "AWS": "arn:aws:iam::146128167716:root"     (source aws account id)
+            },
+            "Action": [
+                "s3:ReplicateDelete",
+                "s3:ReplicateObject"
+            ],
+            "Resource": "arn:aws:s3:::dest-121212/*"      (destination bucket arn)
+        },
+        {
+            "Sid": "2",
+            "Effect": "Allow",
+            "Principal": {
+                "AWS": "arn:aws:iam::146128167716:root"  (Source aws account id)
+            },
+            "Action": [
+                "s3:GetBucketVersioning",
+                "s3:PutBucketVersioning"
+            ],
+            "Resource": "arn:aws:s3:::dest-121212"   (destination bucket arn)
+        }
+    ]
+}
