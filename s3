@@ -1,0 +1,61 @@
+Source Bucket policy
+
+{
+    "Version": "2012-10-17",
+    "Id": "Policy166806fhgdjjhfjh",
+    "Statement": [
+        {
+            "Sid": "Stmt1668hfdjfjhj4",
+            "Effect": "Allow",
+            "Principal": {
+                "AWS": "arn:aws:iam::xxxxxxxxxxxxx:root"   (destination bucket account id)
+            },
+            "Action": [
+                "s3:GetObject",
+                "s3:ListBucket"
+            ],
+            "Resource": [
+                "arn:aws:s3:::lsmv/*",         (source bucket)
+                "arn:aws:s3:::lsmv"
+            ]
+        }
+    ]
+}
+
+Setup an IAM User in the destination account and attach this policy to destination bucket in the source AWS account.
+
+{
+    "Version": "2012-10-17", 
+    "Statement": [	
+        {	
+            "Effect": "Allow",		
+			"Action": [
+                "s3:GetObject",
+                "s3:ListBucket"
+            ],
+            "Resource": [
+                "arn:aws:s3:::lsmv/*",
+                "arn:aws:s3:::lsmv"
+            ]
+        },
+        {
+            "Effect": "Allow",
+            "Action": [
+                "s3:ListBucket",
+				"s3:PutObject",
+				"s3:PutObjectAcl"
+            ],
+            "Resource": [
+                "arn:aws:s3:::lscl/*",         (destination bucket)
+                "arn:aws:s3:::lscl"
+            ]
+        }
+    ]
+}	
+
+
+credential of destination aws account.
+aws s3 sync s3://lsmv s3://lscl --source-region ap-south-1 --region us-east-1
+                 source     destination                 
+
+aws s3 sync s3://sourcebu-h s3://destinationbu-h --source-region us-east-1 --region ap-south-1
